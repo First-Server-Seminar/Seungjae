@@ -72,7 +72,29 @@ router.delete('/:idx', (req, res) => {
 
 /** idx값으로 특정 멤버 정보 수정 */
 router.put('/:idx', (req, res) => {
+  const { idx } = req.params;
+  const { name, part, age } = req.body;
 
+  if(!idx || !name || !part || !age) {
+    console.log("필요한 값이 없습니다!");
+    return res.status(statusCode.BAD_REQUEST).send(util.fail(statusCode.BAD_REQUEST, responseMessage.NULL_VALUE));
+  }
+
+  const memberIdx = membersDB.findIndex( member => member.idx == idx);
+
+  if(memberIdx === -1) { // 없을 경우 -1 반환
+    console.log("존재하지않는 유저 id 입니다.");
+    return res.status(statusCode.BAD_REQUEST).send(util.fail(statusCode.BAD_REQUEST, responseMessage.NO_USER));
+  }
+
+  membersDB[memberIdx] = { // membersDB[memberIdx] 인덱스에 접근해서 값을 수정
+    idx: Number.parseInt(idx), // params로 들어온값은 String으로 -> int형으로 변환
+    name,
+    part,
+    age
+  };
+
+  return res.status(statusCode.OK).send(util.success(statusCode.OK, responseMessage.MEMBER_UPDATE_SUCCESS, membersDB));
 });
 
 module.exports = router;
