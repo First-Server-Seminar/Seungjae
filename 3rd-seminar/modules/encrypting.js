@@ -33,18 +33,19 @@ async function encrypting(DB, id, password) { //6. usersDB에 id, 암호화된 p
   }
 }
 
-async function checkPassword(answerPassword, password, salt) {
-  const newPassword = await encryptingPassword(password, salt);
+// async function checkPassword(answerPassword, password, salt) {
+//   const newPassword = await encryptingPassword(password, salt);
 
-  return new Promise((resolve, reject) => {
-    if (answerPassword === newPassword) {
-      resolve();
-    }
-    reject();
-  });
-}
+//   return new Promise((resolve, reject) => {
+//     if (answerPassword === newPassword) {
+//       resolve();
+//     }
+//     reject();
+//   });
+// }
 
 module.exports = {
   encrypting,
-  checkPassword
+  // checkPassword,
+  encryptingPassword
 };

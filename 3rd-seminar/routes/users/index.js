@@ -34,7 +34,7 @@ router.post('/signup', (req, res) => {
   return res.status(statusCode.OK).send(util.success(statusCode.OK, responseMessage.SIGN_UP_SUCCESS, id));
 });
 
-router.post('/signin', (req, res) => {
+router.post('/signin', async (req, res) => {
   const {
     id,
     password
@@ -56,17 +56,25 @@ router.post('/signin', (req, res) => {
   // 암호화를 한후 디비에 저장되어있는 password와 일치하면 true일치하지 않으면 Miss Match password 반환
   const user = usersDB[userIndex];
   const userSalt = user.salt;
+  const hashedPassword = await encrypting.encryptingPassword(password, userSalt);
 
-  encrypting.checkPassword(user.password, password, userSalt)
-    .then(() => {
-      console.log("로그인 성공");
-      //5. status: 200 ,message: SIGNIN SUCCESS, data: id 반환 (비밀번호, salt 반환 금지!!)
-      return res.status(statusCode.OK).send(util.success(statusCode.OK, responseMessage.SIGN_IN_SUCCESS, id));
-    })
-    .catch(() => {
-      console.log("로그인 실패")
-      return res.status(statusCode.BAD_REQUEST).send(util.fail(statusCode.BAD_REQUEST, responseMessage.SIGN_IN_FAIL));
-    })
+  if (hashedPassword != user.password) {
+    console.log("로그인 실패")
+    return res.status(statusCode.BAD_REQUEST).send(util.fail(statusCode.BAD_REQUEST, responseMessage.SIGN_IN_FAIL));
+  }
+  console.log("로그인 성공");
+  return res.status(statusCode.OK).send(util.success(statusCode.OK, responseMessage.SIGN_IN_SUCCESS, id));
+
+  // encrypting.checkPassword(user.password, password, userSalt)
+  //   .then(() => {
+  //     console.log("로그인 성공");
+  //     //5. status: 200 ,message: SIGNIN SUCCESS, data: id 반환 (비밀번호, salt 반환 금지!!)
+  //     return res.status(statusCode.OK).send(util.success(statusCode.OK, responseMessage.SIGN_IN_SUCCESS, id));
+  //   })
+  //   .catch(() => {
+  //     console.log("로그인 실패")
+  //     return res.status(statusCode.BAD_REQUEST).send(util.fail(statusCode.BAD_REQUEST, responseMessage.SIGN_IN_FAIL));
+  //   })
 });
 
 router.get('/', (req, res) => {
