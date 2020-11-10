@@ -221,12 +221,12 @@ router.put('/:id', async (req, res) => {
 
     if (!userName) {
       console.log('userName 값은 바뀌지 않습니다.');
-      userName = user.dataValues.userName;
+      userName = user.userName;
     }
 
     if (!email) {
       console.log('email 값은 바뀌지 않습니다.');
-      email = user.dataValues.email;
+      email = user.email;
     }
 
     if (!password) {
@@ -241,7 +241,7 @@ router.put('/:id', async (req, res) => {
       salt = crypto.randomBytes(64).toString('base64');
       hashedPassword = crypto.pbkdf2Sync(password, salt, 10000, 64, 'sha512').toString('base64');
     } else {
-      salt = user.dataValues.salt;
+      salt = user.salt;
       hashedPassword = user.password;
       console.log(hashedPassword);
     }
