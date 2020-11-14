@@ -8,6 +8,11 @@ module.exports = {
   MEMBER_READ_ALL_SUCCESS: "전체 회원 조회성공",
   MEMBER_UPDATE_SUCCESS: "회원 수정 성공",
   MEMBER_DELETE_SUCCESS: "회원 삭제 성공",
+  MEMBER_CREATE_FAIL: "회원 생성 실패",
+  MEMBER_READ_FAIL: "회원 조회 실패",
+  MEMBER_READ_ALL_FAIL: "전체 회원 조회실패",
+  MEMBER_UPDATE_FAIL: "회원 수정 실패",
+  MEMBER_DELETE_FAIL: "회원 삭제 실패",
 
   /* 회원가입 */
   SIGN_UP_SUCCESS: "회원가입성공",
