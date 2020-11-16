@@ -27,7 +27,7 @@ module.exports = {
       console.log(user);
       const post = await Post.create({title,contents});
 
-      await user.addPost(post);
+      await user.addPost(post); // post에 해당 user에 대한 외래키 추가
 
       return res
         .status(statusCode.OK)
