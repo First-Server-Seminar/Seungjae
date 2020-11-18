@@ -70,5 +70,62 @@ module.exports = {
       console.error(err);
       return res.status(statusCode.INTERNAL_SERVER_ERROR).send(util.fail(statusCode.INTERNAL_SERVER_ERROR, responseMessage.CREATE_LIKE_FAIL));
     }
+  },
+  deleteLike: async (req, res) => {
+    const PostId = req.params.postId;
+    const UserId = req.body.userId;
+
+    if(!PostId || !UserId) {
+      console.log('필요한 값이 없습니다!');
+      return res.status(statusCode.BAD_REQUEST).send(util.fail(statusCode.BAD_REQUEST, responseMessage.NULL_VALUE));
+    }
+
+    try {
+      const user = await User.findOne({
+        where: {
+          id: UserId
+        }
+      });
+
+      if(!user) {
+        console.log("존재하지 않는 아이디 입니다.");
+        return res.status(statusCode.BAD_REQUEST).send(util.fail(statusCode.BAD_REQUEST, responseMessage.NO_USER));
+      }
+  
+      const post = await Post.findOne({
+        where: {
+          id: PostId 
+        }
+      })
+
+      if(!post) {
+        console.log("존재하지 않는 게시글 입니다.");
+        return res.status(statusCode.BAD_REQUEST).send(util.fail(statusCode.BAD_REQUEST, responseMessage.NO_POST));
+      }
+
+      const like = await Like.findOne({
+        where: {
+          UserId,
+          PostId
+        }
+      });
+
+      if(!like) {
+        console.log("존재하지 않는 좋아요 입니다.");
+        return res.status(statusCode.BAD_REQUEST).send(util.fail(statusCode.BAD_REQUEST, responseMessage.NO_Like));
+      }
+
+      await Like.destroy({
+        where: {
+          UserId,
+          PostId
+        }
+      });
+
+      return res.status(statusCode.OK).send(util.success(statusCode.OK, responseMessage.DELETE_LIKE_SUCCESS, like));
+    } catch(err) {
+      console.error(err);
+      return res.status(statusCode.INTERNAL_SERVER_ERROR).send(util.fail(statusCode.INTERNAL_SERVER_ERROR, responseMessage.DELETE_LIKE_FAIL));
+    }
   }
 }

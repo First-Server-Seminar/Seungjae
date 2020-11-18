@@ -11,4 +11,7 @@ router.get('/', postController.readPosts);
 // [POST] localhost:3000/posts/:postId/like
 router.post('/:postId/like', postController.createLike);
 
+// [DELETE] localhost:3000/posts/:postId/like
+router.delete('/:postId/like', postController.deleteLike);
+
 module.exports = router;
