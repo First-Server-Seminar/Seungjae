@@ -3,7 +3,7 @@ const util = require('../modules/util');
 const responseMessage = require('../modules/responseMessage');
 const statusCode = require('../modules/statusCode');
 const {
-  User
+  User, Post
 } = require('../models');
 const {
   userService
@@ -128,7 +128,13 @@ module.exports = {
         where: {
           id
         },
-        attributes: ['id', 'email', 'userName']
+        attributes: ['email', 'userName'],
+        include: [{
+          model: Post
+        }, {
+          model: Post,
+          as: 'Liked',  
+        }],
       });
   
       if (!user) {
