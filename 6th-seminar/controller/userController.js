@@ -64,7 +64,7 @@ module.exports ={
       return res.status(statusCode.INTERNAL_SERVER_ERROR).send(util.fail(statusCode.INTERNAL_SERVER_ERROR, responseMessage.SIGN_IN_FAIL));
     }
   },
-  readAll: async (req, res) => {
+  readAll: async (req, res) => { // 앞에서 검증했기에 검증 생략
     try {
       const users = await User.findAll({ attributes: ['id', 'email', 'userName'] });
       return res.status(statusCode.OK).send(util.success(statusCode.OK, responseMessage.USER_READ_ALL_SUCCESS, users));
@@ -74,14 +74,15 @@ module.exports ={
     }
   },
   readOne: async (req, res) => {
-    const { id } = req.params;
+    const { id } = req.decoded;
+    console.log(req.decoded);
+
     try{
-      console.log(id);
       const user = await User.findOne({ where: { id }});
-      if (!user) {
-        console.log('존재하지 않는 아이디 입니다.');
-        return res.status(statusCode.BAD_REQUEST).send(util.fail(statusCode.BAD_REQUEST, responseMessage.NO_USER));
-      }
+      // if (!user) {
+      //   console.log('존재하지 않는 아이디 입니다.');
+      //   return res.status(statusCode.BAD_REQUEST).send(util.fail(statusCode.BAD_REQUEST, responseMessage.NO_USER));
+      // } 이 부분도 앞에서 검증했으니 생략해도 될 듯?
       return res.status(statusCode.OK).send(util.success(statusCode.OK, responseMessage.READ_USER_SUCCESS, user));
     } catch (error) {
       console.error(error);
@@ -91,6 +92,7 @@ module.exports ={
   getProfile: async (req, res) => {
     const { id } = req.decoded;
     console.log(req.decoded);
+
     try {
       const user = await User.findOne({ where : { id }, attributes: ['id', 'userName', 'email']});
       return res.status(statusCode.OK).send(util.success(statusCode.OK, responseMessage.READ_PROFILE_SUCCESS, user));
