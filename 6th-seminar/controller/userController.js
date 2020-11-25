@@ -54,7 +54,18 @@ module.exports ={
       }
 
       const { accessToken, refreshToken } = await jwt.sign(user); // 토큰 발급
-  
+
+      await User.update({
+        refreshToken
+      }, {
+        where : {
+          id: user.id
+        }
+      });
+
+      req.session.accessToken = accessToken;
+      req.session.userId = user.id;
+
       return res.status(statusCode.OK).send(util.success(statusCode.OK, responseMessage.SIGN_IN_SUCCESS, {
         accessToken,
         refreshToken

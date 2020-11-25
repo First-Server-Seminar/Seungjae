@@ -7,12 +7,14 @@ const TOKEN_INVALID = -2;
 
 const authUtil = {
   checkToken: async (req, res, next) => {
-    var token = req.headers.jwt;
+    // var token = req.headers.jwt;
+    const token = req.session.accessToken; // 그냥 헤더에 넣는 대신 세션을 사용.
     if (!token) {
       return res.status(sc.BAD_REQUEST).send(ut.fail(sc.BAD_REQUEST, rm.EMPTY_TOKEN));
     }
     const user = await jwt.verify(token);
     if (user === TOKEN_EXPIRED) {
+      // const refreshUser = await jwt.refresh(token);
       return res.status(sc.UNAUTHORIZED).send(ut.fail(sc.UNAUTHORIZED, rm.EXPIRED_TOKEN));
     }
     if (user === TOKEN_INVALID) {

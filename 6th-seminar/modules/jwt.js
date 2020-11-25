@@ -33,5 +33,33 @@ module.exports = {
       }
     }
     return decoded;
+  },
+  refresh: async (refreshToken) => {
+    try {
+      const decoded = jwt.verify(refreshToken, secretKey);
+      console.log("refresh!");
+      console.log(decoded);
+
+      const payload = {
+        id: decoded.id,
+        name: decoded.name
+      };
+
+      const accessToken = await jwt.sign(payload, secretKey, options);
+      
+      return accessToken;
+    } catch (err) {
+      if (err.message === 'jwt expired') {
+        console.log('expired token');
+        return TOKEN_EXPIRED;
+      } else if (err.message === 'invalid token') {
+        console.log('invalid token');
+        console.log(TOKEN_INVALID);
+        return TOKEN_INVALID;
+      } else {
+        console.log("invalid token");
+        return TOKEN_INVALID;
+      }
+    }
   }
 }
