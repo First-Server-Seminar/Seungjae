@@ -10,15 +10,15 @@ module.exports = {
       name: user.userName
     };
     const result = {
-      accessToken: jwt.sign(payload, secretKey, options),
-      refreshToken: jwt.sign(payload, secretKey, refreshOptions),
+      accessToken: await jwt.sign(payload, secretKey, options),
+      refreshToken: await jwt.sign(payload, secretKey, refreshOptions),
     };
     return result;
   },
   verify: async (token) => { // jwt 식별
     let decoded;
     try {
-      decoded = jwt.verify(token, secretKey);
+      decoded = await jwt.verify(token, secretKey);
     } catch (err) {
       if (err.message === 'jwt expired') {
         console.log('expired token');
@@ -36,7 +36,7 @@ module.exports = {
   },
   refresh: async (refreshToken) => {
     try {
-      const decoded = jwt.verify(refreshToken, secretKey);
+      const decoded = await jwt.verify(refreshToken, secretKey);
       console.log("refresh!");
       console.log(decoded);
 
@@ -46,7 +46,7 @@ module.exports = {
       };
 
       const accessToken = await jwt.sign(payload, secretKey, options);
-      
+
       return accessToken;
     } catch (err) {
       if (err.message === 'jwt expired') {

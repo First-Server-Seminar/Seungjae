@@ -18,7 +18,6 @@ router.get('/', async (req, res) => {
     return res.json(ut.fail(sc.BAD_REQUEST, rm.EMPTY_TOKEN));
   }
   const user = await jwt.verify(token);
-  console.log(user);
 
   if (user === TOKEN_EXPIRED) {
     const currentUser = await User.findOne({
